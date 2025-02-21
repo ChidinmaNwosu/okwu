@@ -12,7 +12,11 @@ interface SummarizerProps {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
-const Summarizer: React.FC<SummarizerProps> = ({ inputText, detectedLang, setMessages }) => {
+const Summarizer: React.FC<SummarizerProps> = ({
+  inputText,
+  detectedLang,
+  setMessages,
+}) => {
   const [loading, setLoading] = useState(false);
 
   const summarizeText = async () => {
@@ -67,5 +71,3 @@ const Summarizer: React.FC<SummarizerProps> = ({ inputText, detectedLang, setMes
 };
 
 export default Summarizer;
-
-

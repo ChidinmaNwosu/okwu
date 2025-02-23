@@ -19,6 +19,10 @@ const Summarizer: React.FC<SummarizerProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
 
+  const limitWords = (text: string, wordLimit: number) => {
+    return text.split(" ").slice(0, wordLimit).join(" ") + "...";
+  };
+
   const summarizeText = async () => {
     if (!inputText.trim()) {
       console.warn("No input text provided.");
@@ -42,13 +46,22 @@ const Summarizer: React.FC<SummarizerProps> = ({
       const summarizer = await window.ai.summarizer.create({
         type: "key-points",
         format: "markdown",
-        length: "medium",
+        length: "short", // Changed to "short" for a smaller summary
       });
 
       console.log("Summarizing text:", inputText);
-      const summary = await summarizer.summarize(inputText);
+      let summary = await summarizer.summarize(inputText);
 
-      console.log("Summary result:", summary);
+      console.log("Raw Summary result:", summary);
+
+      // Clean up the summarized text
+      summary = summary.replace(/\*\*/g, "").replace(/\*/g, "").replace(/\n/g, " ").replace(/\s+/g, " ").trim();
+
+      // Limit the summary to 50 words
+      summary = limitWords(summary, 50);
+
+      console.log("Final Shortened Summary:", summary);
+
       if (summary) {
         setMessages((prev) => [...prev, { text: summary, type: "bot" }]);
       }
